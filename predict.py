@@ -4,7 +4,7 @@ import time
 from bs4 import BeautifulSoup
 import csv
 
-def pullData(gameID:int):
+def getData(gameID:int):
     """
     Gets data about specified NFL game.
 
@@ -30,5 +30,60 @@ def parse(response):
     soup = BeautifulSoup(response.text, "html.parser")
     return soup
 
-response = pullData(280908009)
-html = parse(response)
+def isPackersGame(title:str)->bool:
+    """
+    Returns true if the game is a Packers game.
+
+    @param title: str
+        Title of the football game (i.e. team vs team)
+    @return isPacker: bool
+        Returns True if this is a Packer's game.
+        Returns False otherwise.
+    """
+    if "Packers" in title:
+        return True
+    return False
+
+def isHome(title: str)->bool:
+    """
+    Title must contain "Packers"
+    Returns true if the Packers are home.
+
+    @param title: str
+        Title of the football game (i.e. team vs team)
+    @return isPacker: bool
+        Returns True if this is a Packer's game.
+        Returns False otherwise.
+    """
+    assert "Packers" in title
+    if title.find("Packers")==0:
+        return False
+    return True
+
+def getTable(soup):
+    """
+    Returns the table of game statistics.
+
+    @param soup
+        Beautiful Soup data structure of the website's HTML.
+    @return table
+        Beautiful Soup data structure of the football game's statistics.
+    """
+    return soup.find("table", attrs={"class": "mod-data"})
+
+
+response = getData(280908009)
+soup = parse(response)
+title = soup.title.text
+
+table = getTable(soup)
+table_data = table.tbody.find_all("tr")
+
+# Grabs data from table in a nice string format
+for i in range(len(table_data)): #len(table_data)
+    # Each row is a football statistic
+    row = table_data[i].find_all("td")
+    # Values are organized as [Category, Visitor Stat, Home Stat]
+    for value in row:
+        v = str(value.text).strip()
+        print(v)
