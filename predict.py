@@ -79,29 +79,32 @@ def getVariables(table)->list:
     @param table
         Beautiful Soup data structure of the football game's statistics.
     @return variables: list
-        Returns list of relevant variables to track.
+        Returns list of relevant variables to track in the feature space.
     """
     tableData = table.tbody.find_all("tr")
-    variables = ["Home game"]
+    variables = []
+    # Add variables to feature space
     for i in range(len(tableData)):
         # Each row is a football statistic
         row = tableData[i].find_all("td")
         # Values are organized as [Football Category, Visitor Stat, Home Stat]
         var = str(row[0].text).strip() #converts to string and removes whitespace
-        if var=="Defensive / Special Teams TDs":
+        # Features/ variables to omit
+        if var== "Defensive / Special Teams TDs" or var == "Yards per Play" \
+            or var == "Yards per pass" or var == "Yards per rush" or var == "Turnovers"\
+            or var == "Passing 1st downs" or var == "Rushing 1st downs" or\
+            var == "1st downs from penalties" or (var == "Interceptions thrown"\
+            and variables[-1]=="Pass attempts"):
             continue
         elif var == "3rd down efficiency":
             variables.append("3rd down completions")
             variables.append("3rd down attempts")
-            variables.append("3rd down sucess rate")
         elif var == "4th down efficiency":
             variables.append("4th down completions")
             variables.append("4th down attempts")
-            variables.append("4th down sucess rate")
         elif var == "Comp-Att":
             variables.append("Pass completions")
             variables.append("Pass attempts")
-            variables.append("Pass completion percentage")
         elif var == "Sacks-Yards Lost":
             variables.append("Number of sacks")
             variables.append("Yards lost to sacks")
@@ -110,6 +113,8 @@ def getVariables(table)->list:
         elif var == "Penalties":
             variables.append("Number of penalties")
             variables.append("Penalty yards")
+        elif var == "Passing" or var=="Rushing":
+            variables.append(var+" yards")
         else:
             variables.append(var)
 
