@@ -117,7 +117,12 @@ def getVariables(table)->list:
             variables.append(var+" yards")
         else:
             variables.append(var)
-
+    # Now add opponents statistics
+    size = len(variables)
+    for i in range(size):
+        opp = "Opp. "+ variables[i]
+        variables.append(opp)
+    variables.append("Home game") #was this a Packers home game or not
     return variables
 
 
@@ -127,7 +132,7 @@ title = soup.title.text
 
 table = getTable(soup)
 columns = getVariables(table)
-
+print(len(columns))
 tableData = table.tbody.find_all("tr")
 
 # Grabs data from table in a nice string format
