@@ -71,18 +71,64 @@ def getTable(soup):
     """
     return soup.find("table", attrs={"class": "mod-data"})
 
+def getVariables(table)->list:
+    """
+    Given data about the game, return a list of the relevant variables or features
+    found in the table.
+
+    @param table
+        Beautiful Soup data structure of the football game's statistics.
+    @return variables: list
+        Returns list of relevant variables to track.
+    """
+    tableData = table.tbody.find_all("tr")
+    variables = ["Home game"]
+    for i in range(len(tableData)):
+        # Each row is a football statistic
+        row = tableData[i].find_all("td")
+        # Values are organized as [Football Category, Visitor Stat, Home Stat]
+        var = str(row[0].text).strip() #converts to string and removes whitespace
+        if var=="Defensive / Special Teams TDs":
+            continue
+        elif var == "3rd down efficiency":
+            variables.append("3rd down completions")
+            variables.append("3rd down attempts")
+            variables.append("3rd down sucess rate")
+        elif var == "4th down efficiency":
+            variables.append("4th down completions")
+            variables.append("4th down attempts")
+            variables.append("4th down sucess rate")
+        elif var == "Comp-Att":
+            variables.append("Pass completions")
+            variables.append("Pass attempts")
+            variables.append("Pass completion percentage")
+        elif var == "Sacks-Yards Lost":
+            variables.append("Number of sacks")
+            variables.append("Yards lost to sacks")
+        elif var == "Red Zone (Made-Att)":
+            variables.append("Number of red zone attempts")
+        elif var == "Penalties":
+            variables.append("Number of penalties")
+            variables.append("Penalty yards")
+        else:
+            variables.append(var)
+
+    return variables
+
 
 response = getData(280908009)
 soup = parse(response)
 title = soup.title.text
 
 table = getTable(soup)
-table_data = table.tbody.find_all("tr")
+columns = getVariables(table)
+
+tableData = table.tbody.find_all("tr")
 
 # Grabs data from table in a nice string format
-for i in range(len(table_data)): #len(table_data)
+for i in range(len(tableData)): #len(tableData)
     # Each row is a football statistic
-    row = table_data[i].find_all("td")
+    row = tableData[i].find_all("td")
     # Values are organized as [Category, Visitor Stat, Home Stat]
     for value in row:
         v = str(value.text).strip()
