@@ -5,7 +5,6 @@ from bs4 import BeautifulSoup
 import csv
 
 # TODO: WRITE METHOD TO SEE WIN/ LOSS MARGIN
-# TODO: TIME OF POSSESION FROM STRING TO SECONDS
 
 IGNORED_VARS = {"Defensive / Special Teams TDs","Yards per Play","Yards per pass", \
 "Yards per rush","Turnovers","Passing 1st downs","Rushing 1st downs", \
@@ -202,7 +201,7 @@ def getStatsForCategory(webTableRow):
     return stats
 
 """
-Returns the two parts of a two part variable .
+Returns the two parts of a two part variable.
 
 @param twoPartVar: string
     Two part variable separated by a hypen (-)
@@ -211,9 +210,21 @@ Returns the two parts of a two part variable .
     parts data in the variable.
 """
 def splitTwoPartVariable(twoPartVar):
-    return  twoPartVar.split("-")
+    return twoPartVar.split("-")
 
+"""
+Converts time of possession from string to number of total seconds.
 
+@param time: string
+    Time of possession formatted as MM:SS
+@returns int
+    Returns time of possession as total number of seconds.
+"""
+def convertTimeOfPossToSeconds(time):
+    minutes,seconds = time.split(":")
+    minutes = int(minutes)
+    seconds = int(seconds)
+    return (60*minutes)+seconds
 
 # Grab raw HTML data about game from the web
 response = getWebData(280908009)
