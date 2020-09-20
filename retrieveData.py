@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 import csv
 
 # TODO: WRITE METHOD TO SEE WIN/ LOSS MARGIN
-# TODO: TIME OF POSSESION FROM STRING TO SECONDS 
+# TODO: TIME OF POSSESION FROM STRING TO SECONDS
 
 IGNORED_VARS = {"Defensive / Special Teams TDs","Yards per Play","Yards per pass", \
 "Yards per rush","Turnovers","Passing 1st downs","Rushing 1st downs", \
@@ -169,11 +169,21 @@ def getGameData(tableData, title, numVariables):
             # Category is a two part category
             if category in twoPartVars:
                 if category=="Red Zone (Made-Att)":
+                    # Only add the attempts when splitting into two parts
+                    # Convert to int
+                    pass
+                else:
+                    # Add both parts of the variable and increment indices
+                    # when splitting into two parts.
+                    # Convert to int
                     pass
             # Category is a simple one part category
             else:
+                # Convert to int
+                # Then add to data for game
                 pass
-    pass
+            # Increment both indices for data
+    return rowOfDataFromGame
 
 """
 Returns statistics for a game category.
