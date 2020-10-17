@@ -77,6 +77,20 @@ Returns the table of game statistics.
 def getTable(soup):
     return soup.find("table", attrs={"class": "mod-data"})
 
+"""
+Returns the scores for the home and away team
+
+:param soup
+:type Beautiful Soup data structure of the website's HTML
+:return type int,int
+:return scores of the away team and home team
+"""
+def getScores(soup):
+    awayScore = soup.find("div",attrs={"class":"score icon-font-after"}).contents
+    homeScore = soup.find("div",attrs={"class":"score icon-font-before"}).contents
+    awayScore = int(awayScore[0])
+    homeScore = int(homeScore[0])
+    return awayScore,homeScore
 
 """
 Given data about the game, return a list of the relevant variables or features
@@ -178,6 +192,11 @@ def getGameData(tableData, title, numVariables):
                     pass
             # Category is a simple one part category
             else:
+                if category=="Possession":
+                    # Convert to number first
+                    pass
+                else:
+                    pass
                 # Convert to int
                 # Then add to data for game
                 pass
